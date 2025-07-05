@@ -16,11 +16,18 @@ class OpenFile:
         except Exception as e:
             print(f"Error al abrir el archivo: {e}")
 
-    def test(self):
-        print(f'Datos: {self.datos}')
+    def data(self):
+        lista =[]
+        for key, value in self.datos.items():
+            for col, val in value.items():
+                lista.append(float(val))
+        print(lista)
 
-impresion = OpenFile(sys.argv[1])
-impresion.open()
-impresion.test()
-
-
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+        open_file = OpenFile(file_path)
+        open_file.open()
+        open_file.data()
+    else:
+        print("Por favor, proporciona la ruta del archivo CSV como argumento.")

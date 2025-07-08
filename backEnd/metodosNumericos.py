@@ -24,8 +24,15 @@ class MetodosNumericos:
             print(f"Error de conversión: {e}")
             return None
 
+        """
+        Metodos de numpy que son utilizados como prueba, el metodo de minimos cuadrados sera realizados por nosotros
+        esto es para ver como va funcionando.
+        
+        
         coef = np.polyfit(x, cie, grado)
         polinomio = np.poly1d(coef)
         ciede_ajuste = polinomio(x)
-
+        
+        
+        """
         return ciede_ajuste

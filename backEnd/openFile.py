@@ -17,11 +17,17 @@ class OpenFile:
             print(f"Error al abrir el archivo: {e}")
 
     def data(self):
-        lista =[]
+        columnas = ['High', 'Low', 'Open', 'Close']
+        listas_separadas = [[] for _ in columnas]
         for key, value in self.datos.items():
-            for col, val in value.items():
-                lista.append(float(val))
-        print(lista)
+            for i, col in enumerate(columnas):
+                try:
+                    if col in value:
+                        listas_separadas[i].append(float(value[col]))
+                except ValueError:
+                    print(f"No se pudo transformar '{value[col]}' a número de la columna '{col}'. Por lo que se va a omitir.")
+
+        return listas_separadas
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

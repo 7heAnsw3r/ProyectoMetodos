@@ -1,4 +1,3 @@
-import sys
 import pandas as pd
 
 class OpenFile:
@@ -8,10 +7,10 @@ class OpenFile:
 
     def open(self):
         """
-        Abre un archivo CSV y filtra las columnas 'High', 'Low', 'Open', 'Close'.
+        Abre un archivo CSV y filtra las columnas 'High', 'Low', 'Open', 'Close', 'Volume', 'Marketcap'.
         """
         try:
-            columnas_filtradas = ['High', 'Low', 'Open', 'Close']
+            columnas_filtradas = ['High', 'Low', 'Open', 'Close','Volume', 'Marketcap']
             self.dataframe = pd.read_csv(self.file, usecols=columnas_filtradas)
             # Convertir las columnas a tipo numérico, ignorando errores
             self.dataframe = self.dataframe.apply(pd.to_numeric, errors='coerce')
@@ -24,18 +23,10 @@ class OpenFile:
     def data(self):
         """"
         Creamos una lista que contenga los datos de cada columna del DataFrame.
+        :return: Lista de listas, donde cada sublista contiene los datos de una columna.
         """
         if self.dataframe is not None:
             return [self.dataframe[col].tolist() for col in self.dataframe.columns]
         else:
             print("No se han cargado datos.")
             return []
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        file_path = sys.argv[1]
-        open_file = OpenFile(file_path)
-        open_file.open()
-        print(open_file.data())
-    else:
-        print("Por favor, proporciona la ruta del archivo CSV como argumento.")

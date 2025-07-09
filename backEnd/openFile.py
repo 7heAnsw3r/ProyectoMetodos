@@ -1,39 +1,41 @@
 import sys
-import csv
+import pandas as pd
 
 class OpenFile:
     def __init__(self, file):
         self.file = file
-        self.datos = {}
+        self.dataframe = None
 
     def open(self):
+        """
+        Abre un archivo CSV y filtra las columnas 'High', 'Low', 'Open', 'Close'.
+        """
         try:
-            with open(self.file, newline='') as file_csv:
-                read = csv.DictReader(file_csv)
-                columnas_filtradas = ['High', 'Low', 'Open', 'Close', 'Volume', 'Marketcap']
-                for i,row in enumerate(read):
-                    self.datos[i]={col: row[col] for col in columnas_filtradas if col in row}
+            columnas_filtradas = ['High', 'Low', 'Open', 'Close']
+            self.dataframe = pd.read_csv(self.file, usecols=columnas_filtradas)
+            # Convertir las columnas a tipo numérico, ignorando errores
+            self.dataframe = self.dataframe.apply(pd.to_numeric, errors='coerce')
+
+            # Eliminar filas con valores NaN que se generaron al convertir a numérico
+            self.dataframe.dropna(inplace=True)
         except Exception as e:
             print(f"Error al abrir el archivo: {e}")
 
     def data(self):
-        columnas = ['High', 'Low', 'Open', 'Close']
-        listas_separadas = [[] for _ in columnas]
-        for key, value in self.datos.items():
-            for i, col in enumerate(columnas):
-                try:
-                    if col in value:
-                        listas_separadas[i].append(float(value[col]))
-                except ValueError:
-                    print(f"No se pudo transformar '{value[col]}' a número de la columna '{col}'. Por lo que se va a omitir.")
-
-        return listas_separadas
+        """"
+        Creamos una lista que contenga los datos de cada columna del DataFrame.
+        """
+        if self.dataframe is not None:
+            return [self.dataframe[col].tolist() for col in self.dataframe.columns]
+        else:
+            print("No se han cargado datos.")
+            return []
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
         open_file = OpenFile(file_path)
         open_file.open()
-        open_file.data()
+        print(open_file.data())
     else:
         print("Por favor, proporciona la ruta del archivo CSV como argumento.")

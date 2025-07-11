@@ -13,7 +13,7 @@ class MetodosNumericos:
         """
         x = self.data[0] # Asumiendo que la primera columna es x es decir High
         y = self.data[1] # Asumiendo que la segunda columna es y es decir Low
-        return self.minimos_cuadrados(x, y, 2)
+        return self.minimos_cuadrados(x, y, 4)
 
     def resolver_ecuaciones(self, A, b):
         """
@@ -40,29 +40,29 @@ class MetodosNumericos:
         return x
 
 
-    def minimos_cuadrados(self, x, y , grado):
+    def minimos_cuadrados(self, x, y, grado):
         """
         Método para calcular la regresión lineal por el método de mínimos cuadrados se calcula el comportamiento de low
-        dado high
+        dado high.
 
         :param x: Los valores independientes (High).
         :param y: Los valores dependientes (Low).
-        :param grado: Grado con el que se espera trabajar es 2 ya que los valores high y low son datos mas directos.
-        :return:
+        :param grado: Grado con el que se espera trabajar.
+        :return: Coeficientes, y_ajustada ajustada y error cuadrático medio.
         """
         n = len(x)
-        # Matriz de diseño A la cual contiene la informacion de la siguiente forma [1,x,x^2,...,x^grado]
-        A = [[x_i**j for j in range(grado + 1)] for x_i in x]
-        """
-        Para el calculo de los coficientes de la regresión lineal se utiliza la siguiente formula:
-        coeficientes = (A^T * A)^-1 * A^T * y
-        """
-        AtA = [[sum(A[i][k] * A[j][k] for i in range(n)) for j in range(grado +1)] for k in range(grado + 1)]
-        AtY = [sum(A[i][j] * y[i] for i in range(n)) for j in range(grado + 1)]
+        A = [[x_i**j for j in range(grado + 1)] for x_i in x] # Matriz de diseño A: [1, x, x^2, ..., x^grado]
+
+
+        AtA = [[sum(A[i][k] * A[i][j] for i in range(n)) for j in range(grado + 1)] for k in range(grado + 1)] # Calcular A^T * A
+        AtY = [sum(A[i][j] * y[i] for i in range(n)) for j in range(grado + 1)] # Calcular A^T * y
+
         coeficientes = self.resolver_ecuaciones(AtA, AtY)
 
-        curva = [sum(coeficientes[j] * (x_i ** j ) for j in range(grado + 1)) for x_i in x]
+        # Calcular la y_ajustada ajustada
+        y_ajustada = [sum(coeficientes[j] * (x_i ** j) for j in range(grado + 1)) for x_i in x]
 
-        error = sum((y[i] - curva[i])**2 for i in range(n)) / n
+        # Calcular el error cuadrático medio
+        error = sum((y[i] - y_ajustada[i])**2 for i in range(n)) / n
 
-        return coeficientes, curva, error
+        return coeficientes, y_ajustada, error

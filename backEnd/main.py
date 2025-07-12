@@ -1,11 +1,13 @@
 import sys
 import matplotlib.pyplot as plt
 from metodosNumericos import MetodosNumericos
+from metodoEuler import MetodoEuler
 
 class Main:
     def __init__(self, file):
         self.file = file
         self.metodo = MetodosNumericos(file)
+        self.euler = MetodoEuler(file) #AGREGAMOS LA INSTANCIA
 
 
     def run(self):
@@ -29,6 +31,12 @@ class Main:
 
             print("Coeficientes:", coeficientes)
             print("Error cuadrático medio:", error)
+            #PARTE PARA EULER (PARECE QUE TEDRE QUE AGREGAR UNA NUEVA FUNCION SOLUTION) #ULTIMA MODIFICACION NATTYRD
+            h = 1 #Este es el numero de dias para la prediccion
+            x0 = x[-1] #Ultimo valor dado en el High
+            predice = self.euler.euler_met(coeficientes, x0, h) #IMPORTANTE: Aun no verifico que este cogiendo bien los datos
+            print(f"Prediccion para el siguiente dia LOW es: {predice:.4f}") #Salida del resultado
+            #TERMINA AQUI LA MODIFICACION
         except Exception as e:
             print(f"Error al procesar el archivo: {e}")
 

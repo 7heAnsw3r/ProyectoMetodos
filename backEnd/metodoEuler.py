@@ -30,4 +30,3 @@ class MetodoEuler:
 
         return y1
 
-     # Esta es la logica basica que aplicamos  directamente a euler

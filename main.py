@@ -13,8 +13,8 @@ class Main:
         try:
             # Mínimos cuadrados
             coeficientes, y_ajustada, error = self.metodo.solution()
-            x = datos[0]
-            y = datos[1]
+            x = list(range(1, 2161)) # Indice evaluado en el tiempo como numero
+            y = datos[0]
 
             # Predicción con Euler
             h = 2  # Número de días para la predicción

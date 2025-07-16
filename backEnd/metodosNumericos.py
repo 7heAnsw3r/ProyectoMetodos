@@ -11,9 +11,9 @@ class MetodosNumericos:
         Metodo principal sirve para llamar a los metodos que se necesiten para resolver el problema
         :return: Hace una llamada al metodo de mínimos cuadrados para resolver el problema de regresión lineal.
         """
-        x = self.data[0] # Asumiendo que la primera columna es x es decir High
-        y = self.data[1] # Asumiendo que la segunda columna es y es decir Low
-        return self.minimos_cuadrados(x, y, 2)
+        x = list(range(1, 2161)) # Indice evaluado en el tiempo como numero
+        y = self.data[0] # Asumiendo que wla segunda columna es y es decir Low
+        return self.minimos_cuadrados(x, y, 5)
 
     def resolver_ecuaciones(self, A, b):
         """

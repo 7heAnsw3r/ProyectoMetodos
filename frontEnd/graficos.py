@@ -4,8 +4,8 @@ import mplfinance as mpf
 import sys
 
 class Graficos:
-    def __init__(self, file):
-        self.metodo = MetodosNumericos(file)
+    def __init__(self, file,to,tf):
+        self.metodo = MetodosNumericos(file,to,tf)
         self.df = self.metodo.open_file.dataframe
 
     def dibujar_velas(self):

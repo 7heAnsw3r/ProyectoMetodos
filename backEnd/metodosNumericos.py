@@ -1,18 +1,20 @@
 from .openFile import OpenFile
 
 class MetodosNumericos:
-    def __init__(self, file):
+    def __init__(self, file,t0,tf):
         self.open_file = OpenFile(file)
         self.open_file.open()
         self.data = self.open_file.data()
+        self.tiempo_inicial = t0
+        self.tiempo_final = tf
 
     def solution(self):
         """
         Metodo principal sirve para llamar a los metodos que se necesiten para resolver el problema
         :return: Hace una llamada al metodo de mínimos cuadrados para resolver el problema de regresión lineal.
         """
-        x = list(range(1, 2161)) # Indice evaluado en el tiempo como numero
-        y = self.data[0] # Asumiendo que wla segunda columna es y es decir Low
+        x = list(range(self.tiempo_inicial, self.tiempo_final+1)) # Indice evaluado en el tiempo como numero
+        y = self.data[0][self.tiempo_inicial-1:self.tiempo_final] # Asumiendo que wla segunda columna es y es decir High
         return self.minimos_cuadrados(x, y, 5)
 
     def resolver_ecuaciones(self, A, b):

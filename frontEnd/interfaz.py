@@ -3,9 +3,12 @@ from tkinter import filedialog, ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from backEnd import MetodosNumericos
+
 from frontEnd.graficos import Graficos
 
+
 class InterfazGrafica:
+
     def __init__(self, root):
         self.root = root
         self.root.title("Interfaz Gráfica - Proyecto")
@@ -36,6 +39,7 @@ class InterfazGrafica:
         frame_buttons.pack(pady=10)
         tk.Button(frame_buttons, text="Generar Gráfica de Métodos", command=self.graficar_metodos).pack(side=tk.LEFT, padx=10)
         tk.Button(frame_buttons, text="Generar Gráfico de Velas", command=self.graficar_velas).pack(side=tk.LEFT, padx=10)
+        tk.Button(frame_buttons, text="Predecir valor", command=self.mostrar_resultado_euler('Resultado es')).pack(side=tk.LEFT,padx=10)
 
         # Área de gráficos
         self.frame_plot = tk.Frame(root)
@@ -78,12 +82,42 @@ class InterfazGrafica:
         graficos = Graficos(self.file_path.get(), self.start_time.get(), self.end_time.get())
         graficos.dibujar_velas()
 
-    def mostrar_grafica(self, plt_figure):
+    def mostrar_grafica(self, fig):
         for widget in self.frame_plot.winfo_children():
             widget.destroy()
 
-        canvas = FigureCanvasTkAgg(plt_figure.gcf(), master=self.frame_plot)
+        canvas = FigureCanvasTkAgg(fig.gcf(), master=self.frame_plot)
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
-        plt.close(plt_figure)  # Cerrar la figura para liberar memoria
+        plt.close(fig)  # Cerrar la figura para liberar memoria
+
+        #FUNCION PARA EULER AUN CON ERRORES
+
+
+    def mostrar_resultado_euler(self, mensaje):
+        """
+        Muestra una ventana pequeña con el resultado usando tkinter y canvas.
+        :param mensaje: Texto que se quiere mostrar.
+        """
+        if not self.file_path.get():
+            tk.messagebox.showerror("Error", "Por favor, carga un archivo primero.")
+            return
+        x0=self.end_time.get()-1
+        metodo = MetodosNumericos(self.file_path.get(), self.start_time.get(), self.end_time.get())
+        datos = metodo.open_file.data()
+        coeficientes, y_ajustada, _ = metodo.solution()
+        x = list(range(self.start_time.get(), self.end_time.get() + 1))
+        y = datos[0][self.start_time.get() - 1:self.end_time.get()]
+        y1 =metodo.euler_met(coeficientes,x0,1)
+        ventana = tk.Tk()
+        ventana.title("Resultado Método de Euler")
+        ventana.geometry("400x150")  # Tamaño pequeño
+
+        canvas = tk.Canvas(ventana, width=400, height=150, bg="white")
+        canvas.pack()
+
+        # Escribe el mensaje en el centro
+        canvas.create_text(200, 75, text= mensaje + y1, font=("Arial", 12), fill="black")
+
+        ventana.mainloop()

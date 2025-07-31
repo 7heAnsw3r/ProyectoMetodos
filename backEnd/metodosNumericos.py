@@ -17,6 +17,22 @@ class MetodosNumericos:
         y = self.data[0][self.tiempo_inicial-1:self.tiempo_final] # Asumiendo que wla segunda columna es y es decir High
         return self.minimos_cuadrados(x, y, 5)
 
+#METODO AGREGADO PARA USAR EULER YA ESTA BIEN AÑADIDA
+    def solution_euler(self, x0):
+        """
+        Metodo para llamar el metodo de prediccion euler. Debemos considerar que vamos a trabajar con un X0 = tf
+        que es valor inicial igual al valor final High o Low dado por el intervalo escogido dentro de la parte grafica
+        del metodo de minimos cuadrados. (Trabajamos con prediccion en el mismo intervalo).
+        X0: Dato del tiempo(Dias), EJMP: rango de [1,2200] el X0 sera 2200 y h en 1 tal que predice Y1 para X1=2201
+        :return:
+        """
+        coeficientes, y_ajustada, error = self.solution()
+        h= 1
+        y1 = self.euler_met(coeficientes, x0, h)
+
+        return   y1
+
+
     def resolver_ecuaciones(self, A, b):
         """
         Resolver un sistema de ecuaciones lineales Ax = b utilizando eliminación Gaussiana.

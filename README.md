@@ -25,16 +25,16 @@ Se enfoca en demostrar cómo herramientas matemáticas como la **regresión por 
 ```bash
 .
 ├── main.py                # Script principal del proyecto
-├── backEnd/                 # Funciones auxiliares (si las hay)
-│   └── __init__.py         # Implementación de métodos numéricos
-│   └── metodosNumericos.py       # Implementación de regresión por mínimos cuadrados
-│   └── openFile.py      # Implementación de resolución de sistemas de ecuaciones lineales
-├── frontEnd/                  # Archivos CSV con datos históricos
-│   └── __init__.py          # Datos históricos de Bitcoin
-│   └── graficos.py          # Datos históricos de Bitcoin
-│   └── interfaz          # Datos históricos de Bitcoin
-├── Archivos/                 # Gráficos generados por el análisis
-│   └── Informes.pdfs          # Gráficos generados por el análisis
+├── backEnd/                
+│   └── __init__.py         
+│   └── metodosNumericos.py       
+│   └── openFile.py      
+├── frontEnd/                  
+│   └── __init__.py          
+│   └── graficos.py         
+│   └── interfaz          
+├── Archivos/                 
+│   └── Informes.pdfs         
 ├── coin_Ethereum.csv      # Datos históricos de Ethereum
 └── README.md              # Este archivo
 ```

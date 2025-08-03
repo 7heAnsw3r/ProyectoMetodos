@@ -17,7 +17,6 @@ class MetodosNumericos:
         y = self.data[0][self.tiempo_inicial-1:self.tiempo_final] # Asumiendo que wla segunda columna es y es decir High
         return self.minimos_cuadrados(x, y, 5)
 
-#METODO AGREGADO PARA USAR EULER YA ESTA BIEN AÑADIDA
     def solution_euler(self, x0):
         """
         Metodo para llamar el metodo de prediccion euler. Debemos considerar que vamos a trabajar con un X0 = tf
@@ -75,22 +74,22 @@ class MetodosNumericos:
         :param grado: Grado con el que se espera trabajar.
         :return: Coeficientes, y_ajustada ajustada y error cuadrático medio.
         """
-        n = len(x)
-        A = [[x_i**j for j in range(grado + 1)] for x_i in x] # Matriz de diseño A: [1, x, x^2, ..., x^grado]
+        try:
+            if len(x) != len(y):
+                raise ValueError("Las listas x e y deben tener la misma longitud.")
 
+            n = len(x)
+            A = [[x_i ** j for j in range(grado + 1)] for x_i in x] # x^1 x^2 ... x^n
+            AtA = [[sum(A[i][k] * A[i][j] for i in range(n)) for j in range(grado + 1)] for k in range(grado + 1)]
+            AtY = [sum(A[i][j] * y[i] for i in range(n)) for j in range(grado + 1)]
 
-        AtA = [[sum(A[i][k] * A[i][j] for i in range(n)) for j in range(grado + 1)] for k in range(grado + 1)] # Calcular A^T * A
-        AtY = [sum(A[i][j] * y[i] for i in range(n)) for j in range(grado + 1)] # Calcular A^T * y
+            coeficientes = self.resolver_ecuaciones(AtA, AtY)
+            y_ajustada = [sum(coeficientes[j] * (x_i ** j) for j in range(grado + 1)) for x_i in x]
+            error = sum((y[i] - y_ajustada[i]) ** 2 for i in range(n)) / n
 
-        coeficientes = self.resolver_ecuaciones(AtA, AtY)
-
-        # Calcular la y_ajustada ajustada
-        y_ajustada = [sum(coeficientes[j] * (x_i ** j) for j in range(grado + 1)) for x_i in x]
-
-        # Calcular el error cuadrático medio
-        error = sum((y[i] - y_ajustada[i])**2 for i in range(n)) / n
-
-        return coeficientes, y_ajustada, error
+            return coeficientes, y_ajustada, error, None
+        except Exception as e:
+            return None, None, None, str(e)
 
 
     def derivar(self, coef):
@@ -99,8 +98,13 @@ class MetodosNumericos:
         :param coef: Lista de coeficientes del polinomio.
         :return: Lista de coeficientes de la derivada del polinomio.
         """
-        derivada =[j * coef[j] for j in range(1,len(coef))]
-        return derivada
+        try:
+            if not coef:
+                raise ValueError("La lista de coeficientes no puede estar vacía.")
+            derivada = [j * coef[j] for j in range(1, len(coef))]
+            return derivada, None
+        except Exception as e:
+            return None, str(e)
 
     def evaluarP(self, coe, x):
         """
@@ -109,25 +113,34 @@ class MetodosNumericos:
         :param x: x inicial
         :return: Polinomio evaluado en x
         """
-        return sum(coe[j]*(x ** j) for j in range(len(coe)))
+        try:
+            if not coe:
+                raise ValueError("La lista de coeficientes no puede estar vacía.")
+            return sum(coe[j] * (x ** j) for j in range(len(coe))), None
+        except Exception as e:
+            return None, str(e)
 
 
     def euler_met(self, coe, x0, h):
         """
         Metodo de Euler para aproximar la solución de una ecuación diferencial ordinaria.
-        :param coe: Lista de coeficientes del polinomio.
+        :param coe: Listlia de coeficientes del ponomio.
         :param x0: Valor inicial ultimo valor dado por high.
         :param h: Numero de dias de la prediccion
         :return: Valor aproximado
         """
-        derivada = self.derivar(coe)  # Obtenemos la derivada
-
-        y0 = self.evaluarP(coe, x0)  # Obtenemos el polinomio evaluado en x0
-
-        dydx = self.evaluarP(derivada, x0)  # Evaluamos respecto al valor de la derivada
-        y1 = y0 + h * dydx  # Aplicamos el metodo de Euler
-
-        return y1
+        try:
+            if not coe:
+                raise ValueError("La lista de coeficientes no puede estar vacía.")
+            if h <= 0:
+                raise ValueError("El paso h debe ser un número positivo.")
+            derivada = self.derivar(coe)  # Obtenemos la derivada
+            y0 = self.evaluarP(coe, x0)  # Obtenemos el polinomio evaluado en x0
+            dydx = self.evaluarP(derivada, x0)  # Evaluamos respecto al valor de la derivada
+            y1 = y0 + h * dydx  # Aplicamos el metodo de Euler
+            return y1
+        except Exception as e:
+            return None, str(e)
 
     def calcular_variacion(self, open_values, close_values):
         """
@@ -136,7 +149,9 @@ class MetodosNumericos:
         :param close_values: Lista de valores de cierre (Close).
         :return: Lista de variaciones diarias.
         """
-        if len(open_values) != len(close_values):
-            raise ValueError("Las listas de valores de apertura y cierre deben tener la misma longitud.")
-
-        return [close - open for open, close in zip(open_values, close_values)]
+        try :
+            if len(open_values) != len(close_values):
+                raise ValueError("Las listas de valores de apertura y cierre deben tener la misma longitud.")
+            return [close - open for open, close in zip(open_values, close_values)]
+        except Exception as e:
+            return None, str(e)

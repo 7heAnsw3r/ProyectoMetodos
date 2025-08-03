@@ -3,7 +3,6 @@ from tkinter import filedialog, ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from backEnd import MetodosNumericos
-
 from frontEnd.graficos import Graficos
 
 
@@ -12,7 +11,7 @@ class InterfazGrafica:
     def __init__(self, root):
         self.root = root
         self.root.title("Interfaz Gráfica - Proyecto")
-        self.root.geometry("900x600")
+        self.root.geometry("900x700")
 
         # Variables
         self.file_path = tk.StringVar()
@@ -39,7 +38,6 @@ class InterfazGrafica:
         frame_buttons.pack(pady=10)
         tk.Button(frame_buttons, text="Generar Gráfica de Métodos", command=self.graficar_metodos).pack(side=tk.LEFT, padx=10)
         tk.Button(frame_buttons, text="Generar Gráfico de Velas", command=self.graficar_velas).pack(side=tk.LEFT, padx=10)
-        tk.Button(frame_buttons, text="Predecir valor", command=self.mostrar_resultado_euler('Resultado es')).pack(side=tk.LEFT,padx=10)
 
         # Área de gráficos
         self.frame_plot = tk.Frame(root)
@@ -59,17 +57,28 @@ class InterfazGrafica:
         # Lógica para graficar con métodos
         metodo = MetodosNumericos(self.file_path.get(),self.start_time.get(),self.end_time.get())
         datos = metodo.open_file.data()
-        coeficientes, y_ajustada, _ = metodo.solution()
+        coeficientes, y_ajustada, _, error = metodo.solution()
+        if not coeficientes or not y_ajustada:
+            tk.messagebox.showerror("Error", "No se pudo calcular la solución. Verifique los datos.")
+            return
+        if error:
+            tk.messagebox.showerror("Error", "No se pudo calcular la solución. Verifique los datos.")
+            return
         x = list(range(self.start_time.get(), self.end_time.get() + 1))
         y = datos[0][self.start_time.get() - 1:self.end_time.get()]
+        x0 = self.end_time.get() - 1
+        y1 = metodo.euler_met(coeficientes, x0, 1)
+        if isinstance(y1, tuple):
+            y1 = y1[0]
 
         plt.figure(figsize=(10, 6))
         plt.plot(x, y, label="Datos Originales")
         plt.plot(x, y_ajustada, label="Curva Ajustada", color="red")
         plt.title("Gráfica de Métodos")
         plt.xlabel("Tiempo")
-        plt.ylabel("Valores")
+        plt.ylabel("High")
         plt.legend()
+        plt.text(x[-1], y1, f'Predicción: {y1:.2f}', fontsize=10, color='blue', ha='center', va='center')
 
         self.mostrar_grafica(plt)
 
@@ -90,34 +99,4 @@ class InterfazGrafica:
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
-        plt.close(fig)  # Cerrar la figura para liberar memoria
-
-        #FUNCION PARA EULER AUN CON ERRORES
-
-
-    def mostrar_resultado_euler(self, mensaje):
-        """
-        Muestra una ventana pequeña con el resultado usando tkinter y canvas.
-        :param mensaje: Texto que se quiere mostrar.
-        """
-        if not self.file_path.get():
-            tk.messagebox.showerror("Error", "Por favor, carga un archivo primero.")
-            return
-        x0=self.end_time.get()-1
-        metodo = MetodosNumericos(self.file_path.get(), self.start_time.get(), self.end_time.get())
-        datos = metodo.open_file.data()
-        coeficientes, y_ajustada, _ = metodo.solution()
-        x = list(range(self.start_time.get(), self.end_time.get() + 1))
-        y = datos[0][self.start_time.get() - 1:self.end_time.get()]
-        y1 =metodo.euler_met(coeficientes,x0,1)
-        ventana = tk.Tk()
-        ventana.title("Resultado Método de Euler")
-        ventana.geometry("400x150")  # Tamaño pequeño
-
-        canvas = tk.Canvas(ventana, width=400, height=150, bg="white")
-        canvas.pack()
-
-        # Escribe el mensaje en el centro
-        canvas.create_text(200, 75, text= mensaje + y1, font=("Arial", 12), fill="black")
-
-        ventana.mainloop()
+        plt.close(fig.gcf())

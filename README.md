@@ -1,32 +1,50 @@
 # 📈 Proyecto de Métodos Numéricos
 
-## Descripción del Proyecto
+## 🧠 Descripción
 
-Este proyecto tiene como objetivo analizar y estimar el comportamiento de los precios de criptomonedas utilizando 
-métodos numéricos clásicos de ajuste y regresión.
+Este proyecto tiene como objetivo aplicar métodos numéricos clásicos para analizar y estimar el comportamiento de precios en criptomonedas, utilizando datos históricos.
 
-El propósito principal es demostrar cómo herramientas matemáticas como la regresión por mínimos cuadrados y la 
-resolución de sistemas de ecuaciones pueden aplicarse para modelar y predecir tendencias de precios a partir de datos 
-históricos.
+Se enfoca en demostrar cómo herramientas matemáticas como la **regresión por mínimos cuadrados** y la **resolución de sistemas de ecuaciones lineales** pueden ser utilizadas para modelar y predecir tendencias de precios en un entorno práctico y actual.
 
+> ⚠️ **Nota:** Este proyecto es de carácter educativo. No debe considerarse una herramienta de análisis financiero ni de inversión.
 
-## ⚙️ Paqutes Utilizados
+---
 
-- `pandas`: Para manipulación y análisis de datos.
-- `matplotlib`: Para visualización de datos.
+## ⚙️ Paquetes Utilizados
 
-## ⚠️ Nota
+- `pandas` – Manipulación y análisis de datos.
+- `matplotlib` – Visualización gráfica de los resultados.
+- `numpy` – (opcional, si se usa) Cálculo numérico eficiente.
+- `mplfinance` – Visualización de gráficos financieros (opcional).
+- `tkinter` – Interfaz gráfica para la selección de archivos.
 
-Este proyecto es educativo y no debe considerarse una herramienta de predicción financiera real. Su objetivo es reforzar
-conceptos de métodos numéricos aplicados a un caso práctico contemporáneo.
+---
 
-## 📂 Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
-`Pendiente`
-
-## 🔨 Uso
-
-``` python 
-    python3 main.py data_sheet.csv
+```bash
+.
+├── main.py                # Script principal del proyecto
+├── backEnd/                 # Funciones auxiliares (si las hay)
+│   └── __init__.py         # Implementación de métodos numéricos
+│   └── metodosNumericos.py       # Implementación de regresión por mínimos cuadrados
+│   └── openFile.py      # Implementación de resolución de sistemas de ecuaciones lineales
+├── frontEnd/                  # Archivos CSV con datos históricos
+│   └── __init__.py          # Datos históricos de Bitcoin
+│   └── graficos.py          # Datos históricos de Bitcoin
+│   └── interfaz          # Datos históricos de Bitcoin
+├── Archivos/                 # Gráficos generados por el análisis
+│   └── Informes.pdfs          # Gráficos generados por el análisis
+├── coin_Ethereum.csv      # Datos históricos de Ethereum
+└── README.md              # Este archivo
 ```
 
+## 📊 Ejemplo de Uso
+
+Ya sea desde la terminal de linux o Windows puedes ejecutar el script principal:
+
+```bash
+python main.py
+```
+Esto abrirá una ventana para seleccionar el archivo CSV con los datos históricos de precios de criptomonedas. 
+Una vez seleccionado, se generarán gráficos y análisis basados en los métodos numéricos implementados.

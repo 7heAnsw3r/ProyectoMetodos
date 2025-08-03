@@ -1,7 +1,6 @@
 from backEnd import MetodosNumericos
 import pandas as pd
 import mplfinance as mpf
-import sys
 
 class Graficos:
     def __init__(self, file,to,tf):
@@ -18,16 +17,8 @@ class Graficos:
 
         mpf.plot(
             self.df[['Open', 'High', 'Low', 'Close']],
-            type='candle',
+            type='line',
             style='charles',
             title='Velas OHLC',
             ylabel='Precio'
         )
-
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usar: python frontEnd.graficos <filename>")
-    else:
-        file = sys.argv[1]
-        graficos = Graficos(file)
-        graficos.dibujar_velas()

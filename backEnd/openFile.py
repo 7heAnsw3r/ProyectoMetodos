@@ -12,7 +12,6 @@ class OpenFile:
         try:
             columnas_filtradas = ['High', 'Low', 'Open', 'Close','Volume', 'Marketcap']
             self.dataframe = pd.read_csv(self.file, usecols=columnas_filtradas)
-            # Convertir las columnas a tipo numérico, ignorando errores
             self.dataframe = self.dataframe.apply(pd.to_numeric, errors='coerce')
 
             # Eliminar filas con valores NaN que se generaron al convertir a numérico
